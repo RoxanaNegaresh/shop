@@ -245,11 +245,12 @@ class Goods:
         
         
 class Orders:
-    def __init__(self, order_code: int, user_name: str, shop_code: int, good_code: int, order_date: str, delivery_date:str) -> None:
+    def __init__(self, order_code: int, user_name: str, shop_code: int, good_code: int, good_number: int, order_date: str, delivery_date:str) -> None:
         self.order_code=order_code
         self.user_name=user_name
         self.shop_code=shop_code
         self.good_code=good_code
+        self.good_number=good_number
         self.order_date=order_date
         self.delivery_date=delivery_date
         

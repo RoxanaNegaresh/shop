@@ -262,8 +262,8 @@ class Shops:
         
     def new_shop(self):
         try:
-            self.shop_code=input("Enter shop code:")
-            self.shop_name=input("Enter shop name:")
+            self.shop_code=int(input("Enter shop code: "))
+            self.shop_name=input("Enter shop name: ")
             
             
             connect=pymysql.connect(host='localhost', port=3306, user='root', password='', db='shop')

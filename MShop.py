@@ -148,5 +148,61 @@ class Shops:
     def __init__(self, shop_code: int, shop_name: str, undelivered: int, price: float) -> None:
         self.shop_code=shop_code
         self.shop_name=shop_name
-        self.undelivered=undelivered
-        self.price=price
+        
+        
+    def new_shop(self):
+        try:
+            self.shop_code=input("Enter shop code:")
+            self.shop_name=input("Enter shop name:")
+            
+            
+            connect=pymysql.connect(host='localhost', port=3306, user='root', password='', db='shop')
+            cursor=connect.cursor()
+            cursor.execute(f"""INSERT INTO shops (shop_code, shop_name)
+                    VALUES 
+                    ('{self.shop_code}', '{self.shop_name}');""")
+            print("Shop Added!")
+        except:
+            print("duplicate Shop code! try again.")
+        
+        else:
+            connect.commit()
+            cursor.close()
+            connect.close()
+            
+    def change_info_shop(self): 
+        items = int(input("""Which Item do you need? 
+            1. change your shop code 
+            2. change your shop name 
+            
+""")) 
+     
+        shopcode = input("enter shop code: ") 
+         
+        
+        connect = pymysql.connect(host='localhost', port=3306, user='root', password='', db='shop') 
+        cursor = connect.cursor() 
+        cursor.execute(f"SELECT * FROM shops WHERE shop_code='{shopcode}'") 
+        result = list(cursor.fetchall()) 
+        connect.commit() 
+     
+        if result: 
+            if items == 1: 
+                new_shopcode = input("Enter your new shop code: ") 
+                self.shop_code = new_shopcode
+                cursor.execute(f"UPDATE shops SET shop_code = '{self.shop_code}' WHERE shop_code = '{shopcode}'") 
+                connect.commit() 
+                print("shop code changed successfully!") 
+            elif items == 2: 
+                new_shopname = input("Enter your new shop name: ") 
+                self.shop_name = new_shopname 
+                cursor.execute(f"UPDATE shops SET shop_name = '{self.shop_name}' WHERE shop_code = '{shopcode}'") 
+                connect.commit() 
+                print("shop name changed successfully!")  
+            else: 
+                print("invalid value! (1,2)") 
+            
+            cursor.close() 
+            connect.close() 
+        else: 
+            print("Wrong Shop code! try again.")

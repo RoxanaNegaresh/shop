@@ -19,8 +19,6 @@ class Customers:
             self.firstname=input("Enter your first name: ")
             self.lastname=input("Enter your last name: ")
             self.user_id=input("Enter your user ID: ")
-            if self.user_id.__len__>11:
-                print("ba")
             self.user_phonenumber=input("Enter your phone number: ")
             self.password=input("Enter your password: ")
             
@@ -126,7 +124,6 @@ class Customers:
         
         
         
-        
 class Goods:
     def __init__(self, good_code: int, good_name:str, good_company: str,  good_production_date: str, good_expiration_date: str, good_Purchases: int,  good_inventory: int, good_price: float) -> None:
         self.good_code=good_code
@@ -142,14 +139,14 @@ class Goods:
         
     def New_good(self):
         try:
-            self.good_code=input("Enter the good code:")
-            self.good_name=input("Enter the good name:")
-            self.good_company=input("Enter the good company:")
-            self.good_production_date=input("Enter the good production date:")
-            self.good_expiration_date=input("Enter the good expiration date:")
-            self.good_Purchases=input("Enter the good Purchases:")
-            self.good_inventory=input("Enter the good inventory:")
-            self.good_price=input("Enter the good price:")
+            self.good_code=int(input("Enter the good code: "))
+            self.good_name=input("Enter the good name: ")
+            self.good_company=input("Enter the good company: ")
+            self.good_production_date=input("Enter the good production date: ")
+            self.good_expiration_date=input("Enter the good expiration date: ")
+            self.good_Purchases=int(input("Enter the good Purchases: "))
+            self.good_inventory=int(input("Enter the good inventory: "))
+            self.good_price=float(input("Enter the good price: "))
             
             
             connect=pymysql.connect(host='localhost', port=3306, user='root', password='', db='shop')

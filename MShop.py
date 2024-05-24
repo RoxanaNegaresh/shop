@@ -1,7 +1,7 @@
 import pymysql
 
 class Customers:
-    def __init__(self, user_name: str, firstname: str, lastname: str, user_id: int, user_phonenumber: str, totalprice: float, discount: float, debt: float, password: str) -> None:
+    def __init__(self, user_name: str, firstname: str, lastname: str, user_id: str, user_phonenumber: str, totalprice: float, discount: float, debt: float, password: str) -> None:
         self.user_name=user_name
         self.firstname=firstname
         self.lastname=lastname
@@ -11,15 +11,18 @@ class Customers:
         self.discount=discount
         self.debt=debt
         self.password=password
+    status=0
         
     def sign_up(self):
         try:
-            self.user_name=input("Enter your user name:")
-            self.firstname=input("Enter your first name:")
-            self.lastname=input("Enter your last name:")
-            self.user_id=input("Enter your user ID:")
-            self.user_phonenumber=input("Enter your phone number:")
-            self.password=input("Enter your password:")
+            self.user_name=input("Enter your user name: ")
+            self.firstname=input("Enter your first name: ")
+            self.lastname=input("Enter your last name: ")
+            self.user_id=input("Enter your user ID: ")
+            if self.user_id.__len__>11:
+                print("ba")
+            self.user_phonenumber=input("Enter your phone number: ")
+            self.password=input("Enter your password: ")
             
             
             connect=pymysql.connect(host='localhost', port=3306, user='root', password='', db='shop')

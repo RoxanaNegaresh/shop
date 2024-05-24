@@ -135,6 +135,115 @@ class Goods:
         self.good_inventory=good_inventory
         self.good_price=good_price
         
+        
+        
+    def New_good(self):
+        try:
+            self.good_code=input("Enter the good code:")
+            self.good_name=input("Enter the good name:")
+            self.good_company=input("Enter the good company:")
+            self.good_production_date=input("Enter the good production date:")
+            self.good_expiration_date=input("Enter the good expiration date:")
+            self.good_Purchases=input("Enter the good Purchases:")
+            self.good_inventory=input("Enter the good inventory:")
+            self.good_price=input("Enter the good price:")
+            
+            
+            connect=pymysql.connect(host='localhost', port=3306, user='root', password='', db='shop')
+            cursor=connect.cursor()
+            cursor.execute(f"""INSERT INTO goods (good_code, good_name, good_company, good_production_date, good_expiration_date, good_Purchases, good_inventory, good_price)
+                    VALUES 
+                    ('{self.good_code}', '{self.good_name}', '{self.good_company}', '{self.good_production_date}', '{self.good_expiration_date}', '{self.good_Purchases}', '{self.good_inventory}', '{self.good_price}');""")
+            print("Good added!")
+        except:
+            print("duplicate Good code! try again.")
+        
+        else:
+            connect.commit()
+            cursor.close()
+            connect.close()
+         
+        
+    def change_info_good(self): 
+        items = int(input("""Which Item do you need? 
+            1. change the good code 
+            2. change the good name
+            3. change the good company 
+            4. change the good production date
+            5. change the good expiration date 
+            6. change the good Purchases
+            7. change the good inventory
+            8. change the good price
+""")) 
+     
+        goodcode = input("enter the good code: ") 
+        
+        
+        connect = pymysql.connect(host='localhost', port=3306, user='root', password='', db='shop') 
+        cursor = connect.cursor() 
+        cursor.execute(f"SELECT * FROM goods WHERE good_code='{goodcode}'") 
+        result = list(cursor.fetchall()) 
+        connect.commit() 
+     
+        if result: 
+            if items == 1: 
+                new_goodcode = input("Enter new good code: ") 
+                self.good_code = new_goodcode 
+                cursor.execute(f"UPDATE goods SET good_code = '{self.good_code}' WHERE good_code = '{goodcode}'") 
+                connect.commit() 
+                print("good code changed successfully!") 
+            elif items == 2: 
+                new_goodname = input("Enter new good name: ") 
+                self.good_name= new_goodname 
+                cursor.execute(f"UPDATE goods SET good_name = '{self.good_name}' WHERE good_code = '{goodcode}'") 
+                connect.commit() 
+                print("good name changed successfully!") 
+            elif items == 3: 
+                new_goodcompany = input("Enter new good company: ") 
+                self.good_company= new_goodcompany 
+                cursor.execute(f"UPDATE goods SET good_company = '{self.good_company}' WHERE good_code = '{goodcode}'") 
+                connect.commit() 
+                print("good company changed successfully!") 
+            elif items == 4: 
+                new_good_production_date = input("Enter good production date: ") 
+                self.good_production_date= new_good_production_date 
+                cursor.execute(f"UPDATE goods SET good_production_date = '{self.good_production_date}' WHERE good_code = '{goodcode}'") 
+                connect.commit() 
+                print("good production date changed successfully!") 
+            elif items == 5: 
+                new_good_expiration_date = input("Enter new good expiration date: ") 
+                self.good_expiration_date= new_good_expiration_date 
+                cursor.execute(f"UPDATE goods SET good_expiration_date = '{self.good_expiration_date}' WHERE good_code = '{goodcode}'") 
+                connect.commit() 
+                print("good expiration date changed successfully!") 
+            elif items == 6: 
+                new_goodPurchases = input("Enter new good Purchases: ") 
+                self.good_Purchases= new_goodPurchases 
+                cursor.execute(f"UPDATE goods SET good_Purchases = '{self.good_Purchases}' WHERE good_code = '{goodcode}'") 
+                connect.commit() 
+                print("good Purchases changed successfully!") 
+            elif items == 7: 
+                new_goodinventory = input("Enter new good inventory: ") 
+                self.good_inventory= new_goodinventory 
+                cursor.execute(f"UPDATE goods SET good_inventory = '{self.good_inventory}' WHERE good_code = '{goodcode}'") 
+                connect.commit() 
+                print("good inventory changed successfully!")
+            elif items == 8: 
+                new_goodprice= input("Enter new good price: ") 
+                self.good_price= new_goodprice 
+                cursor.execute(f"UPDATE goods SET good_price = '{self.good_price}' WHERE good_code = '{goodcode}'") 
+                connect.commit() 
+                print("good price changed successfully!")
+            else: 
+                print("invalid value! (1,2,3,4,5,6,7,8)") 
+            
+            cursor.close() 
+            connect.close() 
+        else: 
+            print("Wrong good code! try again.")
+        
+        
+        
 class Orders:
     def __init__(self, order_code: int, user_name: str, shop_code: int, good_code: int, order_date: str, delivery_date:str) -> None:
         self.order_code=order_code

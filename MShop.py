@@ -11,7 +11,8 @@ class Customers:
         self.discount=discount
         self.debt=debt
         self.password=password
-    status=0
+        
+    
         
     def sign_up(self):
         try:
@@ -137,31 +138,49 @@ class Goods:
         
         
         
-    def New_good(self):
-        try:
-            self.good_code=int(input("Enter the good code: "))
-            self.good_name=input("Enter the good name: ")
-            self.good_company=input("Enter the good company: ")
-            self.good_production_date=input("Enter the good production date: ")
-            self.good_expiration_date=input("Enter the good expiration date: ")
-            self.good_Purchases=int(input("Enter the good Purchases: "))
-            self.good_inventory=int(input("Enter the good inventory: "))
-            self.good_price=float(input("Enter the good price: "))
-            
-            
-            connect=pymysql.connect(host='localhost', port=3306, user='root', password='', db='shop')
-            cursor=connect.cursor()
-            cursor.execute(f"""INSERT INTO goods (good_code, good_name, good_company, good_production_date, good_expiration_date, good_Purchases, good_inventory, good_price)
-                    VALUES 
-                    ('{self.good_code}', '{self.good_name}', '{self.good_company}', '{self.good_production_date}', '{self.good_expiration_date}', '{self.good_Purchases}', '{self.good_inventory}', '{self.good_price}');""")
-            print("Good added!")
-        except:
-            print("duplicate Good code! try again.")
+    def add_good(self):
         
+        username = input("enter your user name: ") 
+        password = input("enter your password: ") 
+        
+        connect = pymysql.connect(host='localhost', port=3306, user='root', password='', db='shop') 
+        cursor = connect.cursor() 
+        cursor.execute(f"SELECT * FROM customers WHERE user_name='{username}' AND password='{password}' AND status=1") 
+        result = list(cursor.fetchall()) 
+        connect.commit()
+        
+    
+        if result:
+            
+            try:
+                self.good_code=int(input("Enter the good code: "))
+                self.good_name=input("Enter the good name: ")
+                self.good_company=input("Enter the good company: ")
+                self.good_production_date=input("Enter the good production date: ")
+                self.good_expiration_date=input("Enter the good expiration date: ")
+                self.good_Purchases=int(input("Enter the good Purchases: "))
+                self.good_inventory=int(input("Enter the good inventory: "))
+                self.good_price=float(input("Enter the good price: "))
+                
+                
+                
+                cursor=connect.cursor()
+                cursor.execute(f"""INSERT INTO goods (good_code, good_name, good_company, good_production_date, good_expiration_date, good_Purchases, good_inventory, good_price)
+                        VALUES 
+                        ('{self.good_code}', '{self.good_name}', '{self.good_company}', '{self.good_production_date}', '{self.good_expiration_date}', '{self.good_Purchases}', '{self.good_inventory}', '{self.good_price}');""")
+                print("Good added!")
+            except:
+                print("duplicate Good code! try again.")
+            
+            else:
+                connect.commit()
+                    
         else:
-            connect.commit()
-            cursor.close()
-            connect.close()
+            print("Access Denied!")
+            
+        cursor.close()
+        connect.close()
+        
          
         
     def change_info_good(self): 

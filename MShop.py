@@ -1,4 +1,5 @@
 import pymysql
+import pprint
 
 class Customers:
     def __init__(self, user_name: str, firstname: str, lastname: str, user_id: str, user_phonenumber: str, totalprice: float, discount: float, debt: float, password: str) -> None:
@@ -136,8 +137,22 @@ class Goods:
         self.good_inventory=good_inventory
         self.good_price=good_price
         
+    def good_show(self):
+         
+        connect = pymysql.connect(host='localhost', port=3306, user='root', password='', db='shop') 
+        cursor = connect.cursor() 
+        cursor.execute("SELECT * FROM goods") 
+        result = list(cursor.fetchall())
+        connect.commit()
+        cursor.close()
+        connect.close()
         
         
+        result_len = len(result)
+        for i in result:
+            print(i, end=result_len)
+    
+            
     def add_good(self):
         
         username = input("enter your user name: ") 

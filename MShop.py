@@ -1,6 +1,6 @@
 import pymysql
 import pprint
-
+from datetime import *
 class Customers:
     def __init__(self, user_name: str, firstname: str, lastname: str, user_id: str, user_phonenumber: str, totalprice: int, discount: float, debt: float, password: str) -> None:
         self.user_name=user_name
@@ -142,16 +142,21 @@ class Goods:
          
         connect = pymysql.connect(host='localhost', port=3306, user='root', password='', db='shop') 
         cursor = connect.cursor() 
-        cursor.execute("SELECT * FROM goods") 
-        result = list(cursor.fetchall())
-        connect.commit()
-        cursor.close()
-        connect.close()
         
+        current_date = datetime.now().date() 
+ 
+        cursor.execute(f"SELECT * FROM goods ORDER BY DATEDIFF(good_expiration_date, '{current_date}') LIMIT 5") 
+        nearest_products = cursor.fetchall() 
+        cursor.execute("SELECT good_code, good_name FROM goods") 
+        good_info = cursor.fetchall() 
+    
+        print("List of goods (ordered by nearest expiry date):") 
         
-        result_len = len(result)
-        for i in result:
-            print(i)
+        for product, info in zip(nearest_products, good_info): 
+            print(f"good code: {info[0]}, good name: {info[1]}, Production Date: {product[3]}, Expiry Date: {product[4]}")  
+        
+        cursor.close() 
+        connect.close() 
     
             
     def add_good(self):
@@ -172,8 +177,8 @@ class Goods:
                 self.good_code=int(input("Enter the good code: "))
                 self.good_name=input("Enter the good name: ")
                 self.good_company=input("Enter the good company: ")
-                self.good_production_date=input("Enter the good production date: ")
-                self.good_expiration_date=input("Enter the good expiration date: ")
+                self.good_production_date=input("Enter the good production date (YYYY-MM-DD): ")
+                self.good_expiration_date=input("Enter the good expiration date(YYYY-MM-DD): ")
                 self.good_Purchases=int(input("Enter the good Purchases: "))
                 self.good_inventory=int(input("Enter the good inventory: "))
                 self.good_price=float(input("Enter the good price: "))
@@ -197,6 +202,7 @@ class Goods:
         cursor.close()
         connect.close()
         
+    
          
         
     def change_good_info(self): 

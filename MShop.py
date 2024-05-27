@@ -2,7 +2,7 @@ import pymysql
 import pprint
 
 class Customers:
-    def __init__(self, user_name: str, firstname: str, lastname: str, user_id: str, user_phonenumber: str, totalprice: float, discount: float, debt: float, password: str) -> None:
+    def __init__(self, user_name: str, firstname: str, lastname: str, user_id: str, user_phonenumber: str, totalprice: int, discount: float, debt: float, password: str) -> None:
         self.user_name=user_name
         self.firstname=firstname
         self.lastname=lastname
@@ -13,6 +13,7 @@ class Customers:
         self.debt=debt
         self.password=password
         
+    
     
         
     def sign_up(self):
@@ -127,7 +128,7 @@ class Customers:
         
         
 class Goods:
-    def __init__(self, good_code: int, good_name:str, good_company: str,  good_production_date: str, good_expiration_date: str, good_Purchases: int,  good_inventory: int, good_price: float) -> None:
+    def __init__(self, good_code: int, good_name:str, good_company: str,  good_production_date: str, good_expiration_date: str, good_Purchases: int,  good_inventory: int, good_price: int) -> None:
         self.good_code=good_code
         self.good_name=good_name
         self.good_company=good_company
@@ -150,7 +151,7 @@ class Goods:
         
         result_len = len(result)
         for i in result:
-            print(i, end=result_len)
+            print(i)
     
             
     def add_good(self):
@@ -295,7 +296,7 @@ class Goods:
         
         
         
-class Orders:
+class Orders(Customers, Goods):
     def __init__(self, order_code: int, user_name: str, shop_code: int, good_code: int, good_number: int, order_date: str, delivery_date:str) -> None:
         self.order_code=order_code
         self.user_name=user_name
@@ -304,6 +305,69 @@ class Orders:
         self.good_number=good_number
         self.order_date=order_date
         self.delivery_date=delivery_date
+        
+    def order(self):
+        username = input("enter your user name: ") 
+        
+        connect = pymysql.connect(host='localhost', port=3306, user='root', password='', db='shop')
+        cursor = connect.cursor() 
+        
+        cursor.execute(f"SELECT * FROM customers WHERE user_name='{username}'") 
+        result_user = list(cursor.fetchall()) 
+        connect.commit()
+        if result_user:
+            print("list of goods:")
+            Goods.good_show(self)
+            
+            
+            order=input("do you want to order? Y/N: ")
+            if order=="Y":
+                try:
+                    self.user_name=username
+                    self.shop_code=int(input("enter the shop code: "))
+                    self.good_code=int(input("enter the good code: "))
+                    self.good_number=int(input("how many do you need?: ")) 
+                    cursor.execute(f"""INSERT INTO orders (user_name, shop_code, good_code, good_number)
+                            VALUES 
+                            ('{self.user_name}', '{self.shop_code}', '{self.good_code}', '{self.good_number}');""")
+                    connect.commit()
+                    
+                    cursor.execute(f"SELECT good_price FROM goods WHERE good_code='{self.good_code}'")
+                    price=cursor.fetchone()[0]
+                    connect.commit()
+                    
+                    cursor.execute(f"SELECT good_number FROM orders WHERE good_code='{self.good_code}'")
+                    number=cursor.fetchone()[0]
+                    connect.commit()
+                    
+                    self.totalprice=price*number
+                    cursor.execute(f"UPDATE customers SET totalprice = '{self.totalprice}' WHERE user_name='{username}'")
+                    
+                    print("Complited!")
+               
+                except:
+                    print("Wrong shop code or good code!")
+                    
+                else:
+                    connect.commit()
+                
+            cursor.close()
+            connect.close()
+                
+        else:
+            print("Access Denied!")
+                    
+    
+        
+        
+    
+            
+        
+                
+       
+            
+
+        
         
 class Shops:
     def __init__(self, shop_code: int, shop_name: str, undelivered: int, price: float) -> None:

@@ -312,56 +312,51 @@ class Orders(Customers, Goods):
         self.order_date=order_date
         self.delivery_date=delivery_date
         
-    def order(self):
-        username = input("enter your user name: ") 
+    def order(self): 
+        username = input("enter your user name: ")  
+    
+        connect = pymysql.connect(host='localhost', port=3306, user='root', password='', db='shop') 
+        cursor = connect.cursor()  
+    
+        cursor.execute(f"SELECT * FROM customers WHERE user_name='{username}'")  
+        result_user = list(cursor.fetchall())  
+        connect.commit() 
         
-        connect = pymysql.connect(host='localhost', port=3306, user='root', password='', db='shop')
-        cursor = connect.cursor() 
-        
-        cursor.execute(f"SELECT * FROM customers WHERE user_name='{username}'") 
-        result_user = list(cursor.fetchall()) 
-        connect.commit()
-        if result_user:
-            print("list of goods:")
-            Goods.good_show(self)
+        if result_user: 
+            print("list of goods:") 
+            Goods.good_show(self) 
             
-            
-            order=input("do you want to order? Y/N: ")
-            if order=="Y":
-                try:
-                    self.user_name=username
-                    self.shop_code=int(input("enter the shop code: "))
-                    self.good_code=int(input("enter the good code: "))
-                    self.good_number=int(input("how many do you need?: ")) 
-                    cursor.execute(f"""INSERT INTO orders (user_name, shop_code, good_code, good_number)
-                            VALUES 
-                            ('{self.user_name}', '{self.shop_code}', '{self.good_code}', '{self.good_number}');""")
-                    connect.commit()
+            order = input("do you want to order? Y/N: ") 
+            if order == "Y": 
+                try: 
+                    self.user_name = username 
+                    self.shop_code = int(input("enter the shop code: ")) 
+                    self.good_code = int(input("enter the good code: ")) 
+                    self.good_number = int(input("how many do you need?: "))  
                     
-                    cursor.execute(f"SELECT good_price FROM goods WHERE good_code='{self.good_code}'")
-                    price=cursor.fetchone()[0]
-                    connect.commit()
+                    cursor.execute(f"""INSERT INTO orders (user_name, shop_code, good_code, good_number) 
+                            VALUES  
+                            ('{self.user_name}', '{self.shop_code}', '{self.good_code}', '{self.good_number}');""") 
+                    connect.commit() 
                     
-                    cursor.execute(f"SELECT good_number FROM orders WHERE good_code='{self.good_code}'")
-                    number=cursor.fetchone()[0]
-                    connect.commit()
+                    cursor.execute(f"SELECT good_price FROM goods WHERE good_code='{self.good_code}'") 
+                    price = cursor.fetchone()[0] 
+                    connect.commit() 
                     
-                    self.totalprice=price*number
-                    cursor.execute(f"UPDATE customers SET totalprice = '{self.totalprice}' WHERE user_name='{username}'")
+                    total_price = price * self.good_number 
+                    cursor.execute(f"UPDATE customers SET totalprice = '{total_price}' WHERE user_name='{username}'") 
+                    connect.commit() 
                     
-                    print("Complited!")
-               
-                except:
-                    print("Wrong shop code or good code!")
-                    
-                else:
-                    connect.commit()
+                    print("Completed!") 
                 
-            cursor.close()
-            connect.close()
+                except: 
+                    print("Wrong shop code or good code!") 
+                    
+            else: 
+                print("Access Denied!") 
                 
-        else:
-            print("Access Denied!")
+        cursor.close() 
+        connect.close() 
                     
     
         

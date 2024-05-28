@@ -2,7 +2,7 @@
 import pymysql
 from datetime import *
 
-
+# classes
 class Customers:
     def __init__(self, user_name: str, firstname: str, lastname: str, user_id: str, user_phonenumber: str, totalprice: int, discount: float, debt: float, wallet: float, password: str) -> None:
         self.user_name = user_name
@@ -116,61 +116,61 @@ class Customers:
         else:
             print("Wrong password or username! try again.")
 
-    def loyalty_club(self):
-        username = input("enter your user name: ")
-        password = input("enter your password: ")
+    # def loyalty_club(self):
+    #     username = input("enter your user name: ")
+    #     password = input("enter your password: ")
 
-        connect = pymysql.connect(
-            host='localhost', port=3306, user='root', password='', db='shop')
-        cursor = connect.cursor()
-        cursor.execute(
-            f"SELECT * FROM customers WHERE user_name='{username}' AND password='{password}'")
-        result = list(cursor.fetchall())
-        connect.commit()
+    #     connect = pymysql.connect(
+    #         host='localhost', port=3306, user='root', password='', db='shop')
+    #     cursor = connect.cursor()
+    #     cursor.execute(
+    #         f"SELECT * FROM customers WHERE user_name='{username}' AND password='{password}'")
+    #     result = list(cursor.fetchall())
+    #     connect.commit()
 
-        if result:
-            cursor.execute(
-                f"SELECT totalprice FROM customers WHERE user_name='{self.user_name}'")
-            totalprice = cursor.fetchone()[0]
-            connect.commit()
-            totalprice = int(totalprice)
+    #     if result:
+    #         cursor.execute(
+    #             f"SELECT totalprice FROM customers WHERE user_name='{self.user_name}'")
+    #         totalprice = cursor.fetchone()[0]
+    #         connect.commit()
+    #         totalprice = int(totalprice)
 
-            if totalprice >= 100000:
-                discount = 5
-                discount_amount = (totalprice*discount)/100
-                self.discount = totalprice-discount_amount
-                cursor.execute(
-                    f"UPDATE customers SET discount = '{self.discount}' WHERE user_name = '{username}' AND password='{password}'")
-                connect.commit()
-            elif totalprice >= 500000:
-                cursor.execute(
-                    f"SELECT wallet FROM customers WHERE user_name='{self.user_name}'")
-                wallet = cursor.fetchone()[0]
-                self.wallet = wallet
-                connect.commit()
-                discount += 50000
-                cursor.execute(
-                    f"UPDATE customers SET wallet = '{self.wallet}' WHERE user_name = '{username}' AND password='{password}'")
-                connect.commit()
+    #         if totalprice >= 100000:
+    #             discount = 5
+    #             discount_amount = (totalprice*discount)/100
+    #             self.discount = totalprice-discount_amount
+    #             cursor.execute(
+    #                 f"UPDATE customers SET discount = '{self.discount}' WHERE user_name = '{username}' AND password='{password}'")
+    #             connect.commit()
+    #         elif totalprice >= 500000:
+    #             cursor.execute(
+    #                 f"SELECT wallet FROM customers WHERE user_name='{self.user_name}'")
+    #             wallet = cursor.fetchone()[0]
+    #             self.wallet = wallet
+    #             connect.commit()
+    #             discount += 50000
+    #             cursor.execute(
+    #                 f"UPDATE customers SET wallet = '{self.wallet}' WHERE user_name = '{username}' AND password='{password}'")
+    #             connect.commit()
 
-            cursor.close()
-            connect.close
+    #         cursor.close()
+    #         connect.close
 
-            print("Here is your wallet: ")
-            items = int(input("Which item do you need? (1,2,3)"))
-            if items == 1:
-                print(f"This is your total price: {self.totalprice}")
-            elif items == 2:
-                print(f"This is your discout: {self.discount}")
-            elif items == 3:
-                print(f"This is your debt: {self.debt}")
-            else:
-                print("invalid value! (1,2,3)")
-        else:
-            print("Access Denied!")
+    #         print("Here is your wallet: ")
+    #         items = int(input("Which item do you need? (1,2,3)"))
+    #         if items == 1:
+    #             print(f"This is your total price: {self.totalprice}")
+    #         elif items == 2:
+    #             print(f"This is your discout: {self.discount}")
+    #         elif items == 3:
+    #             print(f"This is your debt: {self.debt}")
+    #         else:
+    #             print("invalid value! (1,2,3)")
+    #     else:
+    #         print("Access Denied!")
 
-        cursor.close()
-        connect.close()
+    #     cursor.close()
+    #     connect.close()
     
         
     def show(self):

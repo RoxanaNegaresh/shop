@@ -418,7 +418,32 @@ class Orders(Customers, Goods):
                 print("Access Denied!") 
                 
         cursor.close() 
-        connect.close() 
+        connect.close()
+        
+        
+    def delivery(self):
+        username = input("enter your user name: ")  
+    
+        connect = pymysql.connect(host='localhost', port=3306, user='root', password='', db='shop') 
+        cursor = connect.cursor()  
+    
+        cursor.execute(f"SELECT * FROM customers WHERE user_name='{username}'")  
+        result_user = list(cursor.fetchall())  
+        connect.commit() 
+        
+        if result_user: 
+            cursor.execute(f"SELECT delivery_date FROM orders WHERE user_name='{username}'")  
+            deliverydate = cursor.fetchone()[0]
+            connect.commit()
+            print(f"the delivery date is: ",deliverydate)
+        else:
+            print("Access Denied!") 
+                
+        cursor.close() 
+        connect.close()
+            
+            
+     
                     
     
         

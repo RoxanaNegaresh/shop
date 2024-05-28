@@ -171,7 +171,32 @@ class Customers:
 
         cursor.close()
         connect.close()
+    
+        
+    def show(self):
+        
+        username = input("enter your user name: ")
+        password = input("enter your password: ")
 
+        connect = pymysql.connect(
+            host='localhost', port=3306, user='root', password='', db='shop')
+        cursor = connect.cursor()
+        cursor.execute(
+            f"SELECT * FROM customers WHERE user_name='{username}' AND password='{password}'")
+        result = list(cursor.fetchall())
+        connect.commit()
+        if result:
+        
+            for i in (result):
+                print("here is your infromation: ")
+                print(i)
+       
+       
+        else:
+            print("Access Denied!")
+
+        cursor.close()
+        connect.close()
 
 class Goods:
     def __init__(self, good_code: int, good_name: str, good_company: str,  good_production_date: str, good_expiration_date: str, good_Purchases: int,  good_inventory: int, good_price: int) -> None:
